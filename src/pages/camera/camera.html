@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle *ngIf="!selectedItem">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Item Details</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="custom-content background-color-transparent">
+  <img [src]="cameraImage" class="camera-shot" *ngIf="!!cameraImage">
+  <!--<video class="bg-video"></video>-->
+
+  <button ion-button color="primary" menuToggle class="camera-button">Toggle Menu</button>
+  <button ion-button (click)="getPicture()" class="camera-button">TakeShot</button>
+</ion-content>
