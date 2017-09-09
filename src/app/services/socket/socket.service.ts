@@ -2,39 +2,46 @@ import {Injectable} from "@angular/core";
 import * as io from 'socket.io-client';
 import Socket = SocketIO.Socket;
 
-import {ShotCallbackInterface} from "./shotCallback.interface";
-
 @Injectable()
 export class SocketService {
-  private socket: Socket;
+  public socket: Socket;
   public isConnected: boolean = false;
-
-  public shotCallBack: ShotCallbackInterface = () => {};
+  public wasDisconnected: boolean = false;
 
   public connect(connectionUrl: string): void {
     this.socket = io(connectionUrl);
 
-    this.socket.on('shot', (msg) => {
-      if (this.shotCallBack) {
-        this.shotCallBack(msg);
-      }
-      console.log("shot", msg);
+    this.isConnected = true;
+
+    this.socket.on('connect_error', function(err) {
+      console.log('error');
+
+      this.isConnected = false;
+      this.wasDisconnected = true;
     });
   }
 
-  public disconnect(): void {
-    if (this.socket && this.socket.disconnected) {
-      return;
-    }
+  public subscribeOnShot(shotCallBack: Function): void {
+    this.socket.on('shot', (msg) => {
+      if (shotCallBack) {
+        shotCallBack(msg);
+      }
+    });
+  }
 
+  public emitShot(): void {
+    this.socket.emit('shot');
+  }
+
+  public disconnect(): void {
+    console.log('disconnected');
     this.socket.disconnect();
+
+    this.isConnected = false;
   }
 
   public sendShot(msg): void {
-    if (msg) {
-      this.socket.emit('shot', msg);
-    } else {
-      console.warn('message not defined')
-    }
+    this.socket.emit('loadPic', msg);
+    console.log('shot send');
   }
 }

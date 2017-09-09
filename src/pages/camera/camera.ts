@@ -3,6 +3,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions } from '@ionic-native/camera-preview';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
+import { SocketService } from "../../app/services/socket/socket.service";
 
 @Component({
   selector: 'app-camera',
@@ -28,9 +29,7 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
 
   public get pictureOpts(): CameraPreviewPictureOptions {
       return {
-        width: 1280,
-        height: 1280,
-        quality: 85
+        quality: 100
       };
   }
 
@@ -38,7 +37,8 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     private cameraPreview: CameraPreview,
-    private base64ToGallery: Base64ToGallery
+    private base64ToGallery: Base64ToGallery,
+    private socketService: SocketService,
 
   ) {
     // If we navigated to this page, we will have an item available as a nav param
@@ -46,7 +46,9 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnInit(): void {
-
+    this.socketService.subscribeOnShot(() => {
+      this.getPicture();
+    })
   }
 
   public ngAfterViewInit(): void {
@@ -57,10 +59,15 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     this.stopCamera();
   }
 
+  public emitShot(): void {
+    this.socketService.emitShot();
+  }
+
   public getPicture(): any {
     this.cameraPreview.takePicture(this.pictureOpts).then((imageData) => {
       this.cameraImage = 'data:image/jpeg;base64,' + imageData;
       this.picToGallery(imageData);
+      this.socketService.sendShot(this.cameraImage);
     }, (err) => {
       console.log(err);
         // this.cameraImage = 'assets/img/test.jpg';
@@ -71,8 +78,6 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     this.cameraPreview.startCamera(this.cameraPreviewOpts).then(
       (res) => {
         console.log(res);
-        // this.media();
-        // window['location'].reload();
       },
       (err) => {
         console.log(err)
@@ -88,30 +93,5 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
       res => console.log('Saved image to gallery ', res),
       err => console.log('Error saving image to gallery ', err)
     );
-  }
-
-  public media() {
-    const constraints = {
-      audio: false,
-      video: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        facingMode: {
-          exact: "environment"
-        },
-      }
-    };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-      .then((mediaStream: MediaStream) => {
-        const video: HTMLVideoElement = document.querySelector('video');
-        video.srcObject = mediaStream;
-        video.onloadedmetadata = function(e) {
-          video.play();
-        };
-      })
-      .catch(function(err) {
-        console.log(err.name + ": " + err.message);
-      });
   }
 }

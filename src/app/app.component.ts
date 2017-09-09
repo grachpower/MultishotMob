@@ -7,6 +7,7 @@ import { CameraPage } from '../pages/camera/camera';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import {SocketService} from "./services/socket/socket.service";
 
 
 @Component({
@@ -23,7 +24,8 @@ export class MyApp {
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    private socketService: SocketService,
   ) {
     this.initializeApp();
 
@@ -44,6 +46,13 @@ export class MyApp {
   }
 
   openPage(page) {
+    if ((page.component === CameraPage) && !this.socketService.isConnected) {
+      this.menu.close();
+      this.nav.setRoot(HomePage);
+      alert('You should connect first');
+
+      return;
+    }
     // close the menu when clicking a link from the menu
     this.menu.close();
     // navigate to the new page if it is not the current page

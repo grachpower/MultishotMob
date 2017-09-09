@@ -9,17 +9,26 @@
 
 
 <ion-content padding>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!(socketService?.isConnected)">
+    <ion-list>
 
-  <h3>Welcome to your first Ionic app!</h3>
+      <ion-item>
+        <ion-label floating>Url address</ion-label>
+        <ion-input type="text" formControlName="contactUrl"></ion-input>
+      </ion-item>
 
-  <p>
-    This starter project is our way of helping you get a functional app running in record time.
-  </p>
-  <p>
-    Follow along on the tutorial section of the Ionic docs!
-  </p>
-  <p>
-    <button ion-button color="primary" menuToggle>Toggle Menu</button>
-  </p>
+    </ion-list>
+    <button ion-button>Подкючиться</button>
+  </form>
+  <button ion-button *ngIf="socketService?.isConnected" color="danger" (click)="socketService?.disconnect()">Отключиться</button>
+  <p *ngIf="socketService?.wasDisconnected">Error. Disconnected</p>
+
+  <!--<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!(socketService?.isConnected)">-->
+    <!--<input type="text" placeholder="192.168.1.1:3000" formControlName="contactUrl">-->
+    <!--<button ion-button>Подкючиться</button>-->
+  <!--</form>-->
+  <!--<button *ngIf="socketService?.isConnected" (click)="socketService?.disconnect()">Отключиться</button>-->
+  <!--<button ion-button color="primary" menuToggle>Toggle Menu</button>-->
 
 </ion-content>
+

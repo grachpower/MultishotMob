@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule } from "@angular/forms";
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
@@ -12,6 +13,8 @@ import { Camera } from '@ionic-native/camera';
 import { CameraPreview } from "@ionic-native/camera-preview";
 import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
 
+import { SocketService } from "./services/socket/socket.service";
+
 @NgModule({
   declarations: [
     MyApp,
@@ -21,6 +24,7 @@ import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    FormsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -33,6 +37,7 @@ import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
     SplashScreen,
     Camera,
     CameraPreview,
+    SocketService,
     Base64ToGallery,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
