@@ -22,9 +22,9 @@ export class SocketService {
   }
 
   public subscribeOnShot(shotCallBack: Function): void {
-    this.socket.on('shot', (msg) => {
+    this.socket.on('shot', (data) => {
       if (shotCallBack) {
-        shotCallBack(msg);
+        shotCallBack(data.timestamp);
       }
     });
   }
@@ -40,8 +40,8 @@ export class SocketService {
     this.isConnected = false;
   }
 
-  public sendShot(msg): void {
-    this.socket.emit('loadPic', msg);
-    console.log('shot send');
+  public sendShot(msg, timestamp): void {
+    this.socket.emit('loadPic', {imgBase: msg, timestamp: timestamp});
+    console.log('shot sent');
   }
 }

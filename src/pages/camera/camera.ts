@@ -46,8 +46,8 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.socketService.subscribeOnShot(() => {
-      this.getPicture();
+    this.socketService.subscribeOnShot((timestamp) => {
+      this.getPicture(timestamp);
     })
   }
 
@@ -63,11 +63,11 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     this.socketService.emitShot();
   }
 
-  public getPicture(): any {
+  public getPicture(timestamp): any {
     this.cameraPreview.takePicture(this.pictureOpts).then((imageData) => {
       this.cameraImage = 'data:image/jpeg;base64,' + imageData;
       this.picToGallery(imageData);
-      this.socketService.sendShot(this.cameraImage);
+      this.socketService.sendShot(this.cameraImage, timestamp);
     }, (err) => {
       console.log(err);
         // this.cameraImage = 'assets/img/test.jpg';
