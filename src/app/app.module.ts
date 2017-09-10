@@ -14,6 +14,7 @@ import { CameraPreview } from "@ionic-native/camera-preview";
 import { Base64ToGallery } from "@ionic-native/base64-to-gallery";
 
 import { SocketService } from "./services/socket/socket.service";
+import {StreamingMedia} from "@ionic-native/streaming-media";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { SocketService } from "./services/socket/socket.service";
     CameraPreview,
     SocketService,
     Base64ToGallery,
+    StreamingMedia,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
