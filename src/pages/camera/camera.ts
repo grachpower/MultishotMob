@@ -10,7 +10,6 @@ import { SocketService } from "../../app/services/socket/socket.service";
   templateUrl: 'camera.html'
 })
 export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
-  public selectedItem: any;
   public cameraImage: string;
 
   public get cameraPreviewOpts(): CameraPreviewOptions {
@@ -40,10 +39,7 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     private base64ToGallery: Base64ToGallery,
     private socketService: SocketService,
 
-  ) {
-    // If we navigated to this page, we will have an item available as a nav param
-    // this.selectedItem = navParams.get('item');
-  }
+  ) {}
 
   public ngOnInit(): void {
     this.socketService.subscribeOnShot((timestamp) => {
@@ -93,5 +89,31 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
       res => console.log('Saved image to gallery ', res),
       err => console.log('Error saving image to gallery ', err)
     );
+  }
+
+  public goToPrevious() {
+    this.navCtrl.pop();
+  }
+
+  public resolveCameraButtonPosition() {
+    if (window.screen.width > window.screen.height) {
+      //horizontal
+      return {
+        position: 'absolute',
+        top: '50%',
+        right: '5vw',
+        transform: 'translate(0, -50%)',
+        width: '15vw',
+        height: '15vw',
+      }
+    } else {
+      //vertical
+      return {
+        position: 'absolute',
+        bottom: '5vw',
+        right: '50%',
+        transform: 'translate(50%, 0)',
+      }
+    }
   }
 }
