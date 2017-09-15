@@ -4,7 +4,6 @@ import { NavController, NavParams } from 'ionic-angular';
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions } from '@ionic-native/camera-preview';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
 import { SocketService } from "../../app/services/socket/socket.service";
-import {StreamingMedia} from "@ionic-native/streaming-media";
 
 @Component({
   selector: 'app-camera',
@@ -39,8 +38,6 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     private cameraPreview: CameraPreview,
     private base64ToGallery: Base64ToGallery,
     private socketService: SocketService,
-    private streamingMedia: StreamingMedia
-
   ) {}
 
   public ngOnInit(): void {
