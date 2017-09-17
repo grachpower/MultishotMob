@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 
 import { NavController, NavParams } from 'ionic-angular';
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions } from '@ionic-native/camera-preview';
-import { Base64ToGallery } from '@ionic-native/base64-to-gallery';
 import { SocketService } from "../../app/services/socket/socket.service";
 
 @Component({
@@ -36,7 +35,6 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
     public navCtrl: NavController,
     public navParams: NavParams,
     private cameraPreview: CameraPreview,
-    private base64ToGallery: Base64ToGallery,
     private socketService: SocketService,
   ) {}
 
@@ -61,7 +59,6 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
   public getPicture(timestamp): any {
     this.cameraPreview.takePicture(this.pictureOpts).then((imageData) => {
       this.cameraImage = 'data:image/jpeg;base64,' + imageData;
-      this.picToGallery(imageData);
       this.socketService.sendShot(this.cameraImage, timestamp);
     }, (err) => {
       console.log(err);
@@ -81,13 +78,6 @@ export class CameraPage implements OnInit, OnDestroy, AfterViewInit {
 
   public stopCamera(): void {
     this.cameraPreview.stopCamera();
-  }
-
-  public picToGallery(base64Data) {
-    this.base64ToGallery.base64ToGallery(base64Data, { prefix: '_img' }).then(
-      res => console.log('Saved image to gallery ', res),
-      err => console.log('Error saving image to gallery ', err)
-    );
   }
 
   public goToPrevious() {

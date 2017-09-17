@@ -38,7 +38,6 @@ import { SocketService } from "./services/socket/socket.service";
     Camera,
     CameraPreview,
     SocketService,
-    Base64ToGallery,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
